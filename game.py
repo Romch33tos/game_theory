@@ -1,5 +1,6 @@
 import random
 from customtkinter import CTk, CTkButton, CTkLabel, set_appearance_mode, set_default_color_theme
+from tkinter import messagebox
 
 class Game:
   def __init__(self):
@@ -63,12 +64,24 @@ class Game:
     )
     self.multiply_button.pack(side = 'right', anchor = 'se', padx = 10, pady = 10)
 
+  def show_rules(self):
+    messagebox.showinfo(title = "Справка", message = "Правила игры", detail = "1. Два игрока делают ходы по очереди\n" \
+    "2. За каждый ход можно:\n    - Добавить к счету + N\n    - Умножить счет на × M\n3. Значения N и M генерируются случайно\n4. Для победы нужно достичь или превысить\n    целевое значение раньше соперника")
+
   def setup_ui(self):
     self.root.title("Игра")
     self.root.geometry("370x320")
     self.root.resizable(width = False, height = False)
     set_appearance_mode("dark")
     set_default_color_theme("blue")
+
+    self.help_button = CTkButton(
+      self.root, width = 80, height = 30,
+      text = "Справка", font = ("Arial", 14),
+      corner_radius = 4, command = self.show_rules,
+      fg_color = "#2b2b2b", text_color = "white", hover_color = "#3b3b3b"
+    )
+    self.help_button.pack(anchor = 'nw', padx = 8, pady = 8)
 
     self.target_label = CTkLabel(
       self.root, text = f"Нужно набрать: {self.target_score}", 
