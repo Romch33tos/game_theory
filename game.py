@@ -11,6 +11,21 @@ class Game:
     self.root = CTk()
     self.setup_ui()
 
+  def make_add_move(self):
+    self.move_count += 1
+    self.current_score += self.add_value
+    self.update_game_state()
+
+  def make_multiply_move(self):
+    self.move_count += 1
+    self.current_score *= self.multiply_value
+    self.update_game_state()
+
+  def update_game_state(self):
+    self.score_label.configure(text = self.current_score)
+    player_text = "Ход первого игрока:" if self.move_count % 2 != 0 else "Ход второго игрока:"
+    self.player_label.configure(text = player_text)
+
   def setup_ui(self):
     self.root.title("Игра")
     self.root.geometry("370x320")
@@ -39,7 +54,7 @@ class Game:
     self.add_button = CTkButton(
       self.root, width = 160, height = 60,
       text = f"+ {self.add_value}", font = ("Arial", 26),
-      corner_radius = 8,
+      corner_radius = 8, command = self.make_add_move,
       fg_color = "#1a6bc4", text_color = "white", hover_color = "#1a4b8c"
     )
     self.add_button.pack(side = 'left', anchor = 'sw', padx = 10, pady = 10)
@@ -47,7 +62,7 @@ class Game:
     self.multiply_button = CTkButton(
       self.root, width = 160, height = 60,
       text = f"× {self.multiply_value}", font = ("Arial", 26),
-      corner_radius = 8,
+      corner_radius = 8, command = self.make_multiply_move,
       fg_color = "#1a6bc4", text_color = "white", hover_color = "#1a4b8c"
     )
     self.multiply_button.pack(side = 'right', anchor = 'se', padx = 10, pady = 10)
