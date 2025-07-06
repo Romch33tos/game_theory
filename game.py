@@ -12,6 +12,26 @@ class Game:
     self.root = CTk()
     self.setup_ui()
 
+  def is_winning_position(self, score, moves_left):
+    if score >= self.target_score:
+      return moves_left % 2 == 0
+    if moves_left == 0:
+      return False
+    options = [
+      self.is_winning_position(score + self.add_value, moves_left - 1),
+      self.is_winning_position(score * self.multiply_value, moves_left - 1)
+    ]
+    return any(options) if (moves_left - 1) % 2 == 0 else all(options)
+
+  def show_hint(self, event):
+    winning_moves = [s for s in range(0, self.target_score) if self.is_winning_position(s, 1)]
+    if winning_moves:
+      self.score_label.configure(text = winning_moves[0])
+      self.root.after(200, self.clear_hint)
+
+  def clear_hint(self):
+    self.score_label.configure(text = self.current_score)
+
   def make_add_move(self):
     self.move_count += 1
     self.current_score += self.add_value
@@ -94,6 +114,7 @@ class Game:
       font = ("Arial", 42), text_color = "white"
     )
     self.score_label.pack(anchor = 'center', pady = 40, ipadx = 120)
+    self.score_label.bind("<Button-1>", self.show_hint)
 
     self.player_label = CTkLabel(
       self.root, text = "Ход первого игрока:", 
